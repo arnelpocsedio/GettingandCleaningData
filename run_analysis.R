@@ -1,4 +1,8 @@
-#getting the data
+##Getting and Cleaning Data Coursera Project
+#This script produces a tidy data of the UCI dataset. Please refer to the README and CodeBook files.
+
+#1. Get data
+#. The function below downloads a data from given URL and unzip it.
 getdata = function(fileURL) {
         if(!file.exists("./data")){dir.create("./data")}
         
@@ -9,23 +13,24 @@ getdata = function(fileURL) {
         }
 }
 
+#Running the function
 fileURL = "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 getdata(fileURL)
 
-#'reading and merging relevant data
-
+#Reading and merging relevant files
+#1. Subject identifiers
 SubjectTrainDF = read.table("./data/UCI HAR Dataset/train/subject_train.txt")
 SubjectTestDF = read.table("./data/UCI HAR Dataset/test/subject_test.txt")
 SubjectDF = rbind(SubjectTrainDF, SubjectTestDF)
-names(SubjectDF) = "subject"
+names(SubjectDF) = "subject" #labelling 
 
+#2. Activity identifiers
 ActivityTrainDF = read.table("./data/UCI HAR Dataset/train/Y_train.txt")
 ActivityTestDF = read.table("./data/UCI HAR Dataset/test/Y_test.txt")
 ActivityDF = rbind(ActivityTrainDF, ActivityTestDF)
 names(ActivityDF) = "activity"
 
-
-
+#.3. The different features or measurements
 FeaturesTrainDF = read.table("./data/UCI HAR Dataset/train/X_train.txt")
 FeaturesTestDF = read.table("./data/UCI HAR Dataset/test/X_test.txt")
 FeatureNames = read.table("./data/UCI HAR Dataset/features.txt")
@@ -33,30 +38,35 @@ FeaturesDF = rbind(FeaturesTrainDF, FeaturesTestDF)
 names(FeaturesDF) = FeatureNames$V2
 
 
+#Creating full dataset by merging the three data subsets
+UCIData = cbind(SubjectDF, ActivityDF, FeaturesDF)
 
-#creating full dataset
-SportsData = cbind(SubjectDF, ActivityDF, FeaturesDF)
+#data overview
+head(UCIData[,1:6])
+tail(UCIData[,1:6])
 
-head(SportsData[,1:10])
-tail(SportsData[,1:10])
-
-#mean and sd variables
+#Identifying mean and standard deviation measurements
 FeatureNames_meansd = grep("mean\\(\\)|std\\(\\)", FeatureNames$V2, value = TRUE)
-SportsData_subset = SportsData[,c("subject", "activity", FeatureNames_meansd)]
 
-#
+#Subsetting the relevant measurements only
+UCIData_subset = UCIData[,c("subject", "activity", FeatureNames_meansd)]
+
+#Including activity labels
 ActivityLabels = read.table("./data/UCI HAR Dataset/activity_labels.txt", stringsAsFactors = FALSE)
-SportsData_subset$activity = as.factor(SportsData_subset$activity)
-SportsData_subset$activity = factor(SportsData_subset$activity, labels = ActivityLabels$V2)
+UCIData_subset$activity = as.factor(UCIData_subset$activity)
+UCIData_subset$activity = factor(UCIData_subset$activity, labels = ActivityLabels$V2)
 
-#
-names(SportsData_subset)<-gsub("^t", "time", names(SportsData_subset))
-names(SportsData_subset)<-gsub("^f", "frequency", names(SportsData_subset))
-names(SportsData_subset)<-gsub("Acc", "Accelerometer", names(SportsData_subset))
-names(SportsData_subset)<-gsub("Gyro", "Gyroscope", names(SportsData_subset))
-names(SportsData_subset)<-gsub("Mag", "Magnitude", names(SportsData_subset))
-names(SportsData_subset)<-gsub("BodyBody", "Body", names(SportsData_subset))
+#Renaming columns to more descriptive labels
+names(UCIData_subset)<-gsub("^t", "time", names(UCIData_subset))
+names(UCIData_subset)<-gsub("^f", "frequency", names(UCIData_subset))
+names(UCIData_subset)<-gsub("Acc", "Accelerometer", names(UCIData_subset))
+names(UCIData_subset)<-gsub("Gyro", "Gyroscope", names(UCIData_subset))
+names(UCIData_subset)<-gsub("Mag", "Magnitude", names(UCIData_subset))
+names(UCIData_subset)<-gsub("BodyBody", "Body", names(UCIData_subset))
 
-#
-SportsData2 = aggregate(.~subject + activity, SportsData_subset, mean)
-head(SportsData2[,1:10])
+#Averaging the different measurements per subject per activity
+UCIData_summary = aggregate(.~subject + activity, UCIData_subset, mean)
+head(UCIData_summary[,1:10])
+
+#Writing the tidy data
+write.table(UCIData_summary, "TidyData.txt")
