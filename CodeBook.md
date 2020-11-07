@@ -36,7 +36,7 @@ The script __run_analysis.R__ contains the codes used to get and clean the data.
 &nbsp;
 
 # The Tidy Data
-The final data in run_analysis.R is named "UCIDataSummary" which was written into file as __TidyData.txt__. The R object UCIDataSummary is a dataframe with 180 rows and 68 columns. The first to columns are the subject identifier and their activities respectively. The remaining columns are mean or standard deviation of different measurements. The 180 rows refers to the different combination of 30 subject and six activities.You can try reading the tidy data using the code  below.
+The final data in run_analysis.R is named "UCIData_summary" which was written into file as __TidyData.txt__. The R object UCIDataSummary is a dataframe with 180 rows and 68 columns. The first to columns are the subject identifier and their activities respectively. The remaining columns are mean or standard deviation of different measurements. The 180 rows refers to the different combination of 30 subject and six activities.You can try reading the tidy data using the code  below.
 
 ```
 data1 = read.table("TidyData.txt", header=TRUE, check.names=FALSE)
@@ -48,11 +48,16 @@ dim(data1)
 unique(data1$subject)
 levels(data1$activity)
 
+#The different column names
+names(data1)[3:12]
+
 head(data1[,1:6])
 
 ```
 
+Consistent with: Wickham, H. (2014). Tidy Data. Journal of Statistical Software, 59(10), 1 - 23. doi:http://dx.doi.org/10.18637/jss.v059.i10,
 
+__TidyData.txt__ or __UCIData_summary__ is a tidy data. Each columns are labelled variables with the first two columns being subject identifiers and activities respectively while the remaining columns are avergage measurements from the different subjects while they conducted different activities. Every row represent one observation. Every subject and activitiy combination is one observational unit and has a corresponding observations in the measurements columns.
 
 
 

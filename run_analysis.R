@@ -1,7 +1,8 @@
 ##Getting and Cleaning Data Coursera Project
 #This script produces a tidy data of the UCI dataset. Please refer to the README and CodeBook files.
 
-#1. Get data
+#Step 1: Merge the training and the test sets to create one data set.
+#Get the data
 #. The function below downloads a data from given URL and unzip it.
 getdata = function(fileURL) {
         if(!file.exists("./data")){dir.create("./data")}
@@ -45,17 +46,20 @@ UCIData = cbind(SubjectDF, ActivityDF, FeaturesDF)
 head(UCIData[,1:6])
 tail(UCIData[,1:6])
 
+#Step 2: Extract only the measurements on the mean and standard deviation for each measurement.
 #Identifying mean and standard deviation measurements
 FeatureNames_meansd = grep("mean\\(\\)|std\\(\\)", FeatureNames$V2, value = TRUE)
 
 #Subsetting the relevant measurements only
 UCIData_subset = UCIData[,c("subject", "activity", FeatureNames_meansd)]
 
+#Step 3: Use descriptive activity names to name the activities in the data set
 #Including activity labels
 ActivityLabels = read.table("./data/UCI HAR Dataset/activity_labels.txt", stringsAsFactors = FALSE)
 UCIData_subset$activity = as.factor(UCIData_subset$activity)
 UCIData_subset$activity = factor(UCIData_subset$activity, labels = ActivityLabels$V2)
 
+#Step 4: Appropriately label the data set with descriptive variable names.
 #Renaming columns to more descriptive labels
 names(UCIData_subset)<-gsub("^t", "time", names(UCIData_subset))
 names(UCIData_subset)<-gsub("^f", "frequency", names(UCIData_subset))
@@ -64,6 +68,9 @@ names(UCIData_subset)<-gsub("Gyro", "Gyroscope", names(UCIData_subset))
 names(UCIData_subset)<-gsub("Mag", "Magnitude", names(UCIData_subset))
 names(UCIData_subset)<-gsub("BodyBody", "Body", names(UCIData_subset))
 
+
+#Step 5: From the data set in step 4, create a second, independent tidy data set 
+#with the average of each variable for each activity and each subject.
 #Averaging the different measurements per subject per activity
 UCIData_summary = aggregate(.~subject + activity, UCIData_subset, mean)
 head(UCIData_summary[,1:10])
