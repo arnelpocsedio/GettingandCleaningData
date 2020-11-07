@@ -36,7 +36,7 @@ The script __run_analysis.R__ contains the codes used to get and clean the data.
 &nbsp;
 
 # The Tidy Data
-The final data in run_analysis.R is named "UCIData_summary" which was written into file as __TidyData.txt__. The R object UCIDataSummary is a dataframe with 180 rows and 68 columns. The first to columns are the subject identifier and their activities respectively. The remaining columns are mean or standard deviation of different measurements. The 180 rows refers to the different combination of 30 subject and six activities.You can try reading the tidy data using the code  below.
+The final data in run_analysis.R is named "UCIData_summary" which was written into file as __TidyData.txt__. The R object UCIDataSummary is a dataframe with 180 rows and 68 columns. The first to columns are the subject identifier and their activities respectively. The remaining columns are mean or standard deviation of different measurements. The 180 rows refers to the different combination of 30 subject and six activities.You can try reading the tidy data using the code  below (after you run run_analysis.R).
 
 ```
 data1 = read.table("TidyData.txt", header=TRUE, check.names=FALSE)

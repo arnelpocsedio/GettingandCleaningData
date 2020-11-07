@@ -76,4 +76,5 @@ UCIData_summary = aggregate(.~subject + activity, UCIData_subset, mean)
 head(UCIData_summary[,1:10])
 
 #Writing the tidy data
-write.table(UCIData_summary, "TidyData.txt")
+write.table(UCIData_summary, "TidyData.txt", row.names = FALSE)
+
