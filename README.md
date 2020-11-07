@@ -27,3 +27,17 @@ In this repository you will find:
 
 3. __Tidy_Data.txt__ is the output from run_analysis.R which is a tidy dataset that can be used for analysis. To load the dataset, you can use the read.table() function in R.
 
+&nbsp;
+&nbsp;
+
+__For reviewers please consider the following code below to easily check the tidy data in R:__
+
+```
+fileURL = "https://coursera-assessments.s3.amazonaws.com/assessments/1604734387982/3e5c2e43-11ac-4dde-9d6d-dad81fbadb1f/TidyData.txt"
+
+download.file(fileURL, destfile = "./TidyData.txt")
+data1 = read.table("TidyData.txt", header=TRUE, check.names=FALSE)
+
+head(data1[,1:10])
+
+```
